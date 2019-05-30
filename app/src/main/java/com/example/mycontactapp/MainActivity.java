@@ -29,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void addData(View view) {
         Log.d("MyContactApp", "MainActivity: Add contact button pressed");
-        boolean isInserted = (myDb.insertData(editName.getText().toString()) &&
-                myDb.insertData(editPhone.getText().toString())  &&
-                myDb.insertData(editAddress.getText().toString())) ;
+        boolean isInserted = myDb.insertData(editName.getText().toString(), editPhone.getText().toString(), editAddress.getText().toString()) ;
         if (isInserted == true) {
             Toast.makeText( MainActivity.this, "Success - contact inserted", Toast.LENGTH_SHORT).show();
 
@@ -69,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
         builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
 
     }
 }
