@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public void addData(View view) {
         Log.d("MyContactApp", "MainActivity: Add contact button pressed");
         boolean isInserted = myDb.insertData(editName.getText().toString(), editPhone.getText().toString(), editAddress.getText().toString()) ;
-        if (isInserted == true) {
+        if (isInserted) {
             Toast.makeText( MainActivity.this, "Success - contact inserted", Toast.LENGTH_SHORT).show();
 
         }
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+        Log.d("MyContactApp", "MainActivity: ViewData-buffer assembled");
         showMessage("Data", buffer.toString());
     }
 
@@ -70,6 +71,34 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(message);
         builder.show();
 
+    }
+
+    public void searchRecord(View view) {
+        Log.d("MyContactApp", "MainActivity: beginning search");
+        Cursor curs = myDb.getAllData();
+        StringBuffer buffer = new StringBuffer();
+        if (editName.getText().toString().isEmpty() && editPhone.getText().toString().isEmpty()
+                && editAddress.getText().toString().isEmpty()) {
+            showMessage("Error", "Nothing to search for!");
+            return;
+        }
+        while (curs.moveToNext()) {
+            if ((editName.getText().toString().isEmpty() || editName.getText().toString().equals(curs.getString(1))) &&
+                    (editAddress.getText().toString().isEmpty() || editAddress.getText().toString().equals(curs.getString(3))) &&
+                    (editPhone.getText().toString().isEmpty() || editPhone.getText().toString().equals(curs.getString(2)))) {
+                buffer.append("ID: " + curs.getString(0) + "\n"+
+                        "Name: " + curs.getString(1) + "\n"+
+                        "Phone: " + curs.getString(2) + "\n"+
+                        "Address: " + curs.getString(3) + "\n");
+            }
+
+        }
+
+        if (buffer.toString().isEmpty()) {
+            showMessage("Error", "None found");
+            return;
+        }
+        showMessage("Search results", buffer.toString());
     }
 }
 
